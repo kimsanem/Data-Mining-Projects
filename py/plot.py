@@ -34,14 +34,14 @@ def z_score(number):
 # print("Z-Score Standardization: ", z_score(number))
 
 
-df = pd.read_csv('../iris.csv');
+df = pd.read_csv('../iris.csv')
 print(df)
 # sepal_length = df['sepal_length']
 sepal_length = df['sepal_length'].to_numpy().reshape(-1, 1)
 range = np.arange(len(sepal_length))
 
 
-fix, axes = plt.subplots(2,2, figsize=(12,8))
+fix, axes = plt.subplots(2,3, figsize=(15,8))
 
 
 # Original Data
@@ -51,29 +51,35 @@ axes[0,0].set_title('Before Min-Max Normalization')
 axes[0,0].set_xlabel('Range')
 axes[0,0].set_ylabel('Sepal Length(cm)')
 
-new_sepal_length = min_max(df.sepal_length)
-print(new_sepal_length)
-
 
 # Custom Min-Max
-axes[0,1].scatter(new_sepal_length, range, color = 'blue', alpha = 0.6)
+new_sepal_length1 = min_max(df.sepal_length)
+axes[0,1].scatter(new_sepal_length1, range, color = 'blue', alpha = 0.6)
 # axes[0,1].boxplot(new_sepal_length, patch_artist=True, boxprops=dict(facecolor='blue', alpha=0.6))
 axes[0,1].set_title('After Min-Max Normalization')
 axes[0,1].set_xlabel('Range [0,1]')
-axes[0,1].set_ylabel('Sepal Length')
+axes[0,1].set_ylabel('Sepal Length(cm)')
 
 # Custom Z-Score
 new_sepal_length2 = z_score(df.sepal_length)
-axes[1,0].scatter(new_sepal_length2, range, c="green", alpha=0.6)
-axes[1,0].set_title("After Z-Score Normalization")
-axes[1,0].set_xlabel("Range")
-axes[1,0].set_ylabel("Sepal Length(cm)")
+axes[0,2].scatter(new_sepal_length2, range, c="green", alpha=0.6)
+axes[0,2].set_title("After Z-Score Normalization")
+axes[0,2].set_xlabel("Range")
+axes[0,2].set_ylabel("Sepal Length(cm)")
 
 # sklearn Min-Max
 minmax_scaler = MinMaxScaler()
-sepal_minmax = minmax_scaler.fit_transform(sepal_length.reshape(-1, 1))
-axes[1,1].scatter(sepal_minmax, range, color="red", alpha=0.6)
-axes[1,1].set_title("sklearn Min-Max Normalization")
+sepal_minmax = minmax_scaler.fit_transform(sepal_length)
+axes[1,0].scatter(sepal_minmax, range, color="red", alpha=0.6)
+axes[1,0].set_title("sklearn Min-Max Normalization")
+axes[1,0].set_xlabel("Range")
+axes[1,0].set_ylabel("Sepal Length(cm)")
+
+#sklearn Z-Score
+zscore_scaler = StandardScaler()
+sepal_zscore = zscore_scaler.fit_transform(sepal_length)
+axes[1,1].scatter(sepal_zscore, range, color="pink", alpha=0.6)
+axes[1,1].set_title("sklearn Z-Score Normalization")
 axes[1,1].set_xlabel("Range")
 axes[1,1].set_ylabel("Sepal Length(cm)")
 
